@@ -1,14 +1,16 @@
 import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
+import { ArrowRight } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
+import { Button } from '@/components/ui/button'
 import { SectionBlock } from '@/components/layout/section-block'
 import { legacyImages } from '@/lib/legacy-images'
 
-const aboutPoints = ['aboutPoint1', 'aboutPoint2', 'aboutPoint3', 'aboutPoint4', 'aboutPoint5'] as const
+const previewPoints = ['aboutPoint1', 'aboutPoint2', 'aboutPoint3'] as const
 
 export async function HomeAbout() {
   const t = await getTranslations('home')
-  const points = aboutPoints.filter((key) => t.has(key))
+  const points = previewPoints.filter((key) => t.has(key))
 
   return (
     <SectionBlock tone="white" className="overflow-hidden">
@@ -35,9 +37,7 @@ export async function HomeAbout() {
             </div>
           </div>
           <div className="absolute left-4 top-4 rounded-xl bg-accent-blue px-4 py-3 text-white shadow-lift sm:left-6 sm:top-6">
-            <p className="text-sm font-semibold">
-              <strong>APPI</strong> {t('aboutBadge')}
-            </p>
+            <p className="text-sm font-semibold">{t('aboutBadge')}</p>
           </div>
         </div>
         <div>
@@ -45,14 +45,8 @@ export async function HomeAbout() {
             {t('aboutTitle')}
           </h2>
           <p className="mt-5 text-base leading-relaxed text-ink-muted sm:text-lg">{t('aboutLead')}</p>
-          {t.has('aboutPara2') && (
-            <p className="mt-4 text-base leading-relaxed text-ink-muted">{t('aboutPara2')}</p>
-          )}
-          {t.has('aboutPara3') && (
-            <p className="mt-4 text-base leading-relaxed text-ink-muted">{t('aboutPara3')}</p>
-          )}
           {points.length > 0 && (
-            <ul className="mt-8 space-y-3">
+            <ul className="mt-6 space-y-2.5">
               {points.map((key) => (
                 <li key={key} className="flex gap-3 text-sm leading-relaxed text-ink-muted sm:text-base">
                   <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-warm" />
@@ -61,20 +55,12 @@ export async function HomeAbout() {
               ))}
             </ul>
           )}
-          <div className="mt-8 grid gap-4 sm:grid-cols-2">
-            <Link
-              href="/about"
-              className="card-premium p-5 transition-colors hover:border-accent-blue/30"
-            >
-              <h3 className="font-serif text-lg font-semibold text-ink">{t('aboutFeature1')}</h3>
+          <Button asChild variant="primary" className="mt-8">
+            <Link href="/about">
+              {t('aboutReadMore')}
+              <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link
-              href="/platforms"
-              className="card-premium p-5 transition-colors hover:border-accent-blue/30"
-            >
-              <h3 className="font-serif text-lg font-semibold text-ink">{t('aboutFeature2')}</h3>
-            </Link>
-          </div>
+          </Button>
         </div>
       </div>
     </SectionBlock>
