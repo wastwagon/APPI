@@ -1,0 +1,63 @@
+# Development overrides — hot reload for api + frontend
+# Usage: pnpm dev:docker  OR  docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  db:
+    ports:
+      - "${POSTGRES_PORT:-5437}:5432"
+    networks: [appi_dev]
+
+  redis:
+    ports:
+      - "${REDIS_PORT:-6382}:6379"
+    networks: [appi_dev]
+
+  migrate:
+    networks: [appi_dev]
+
+  api:
+    build:
+      target: development
+    ports:
+      - "${API_PORT:-4000}:4000"
+    volumes:
+      - ./apps/api/src:/app/apps/api/src:ro
+      - ./packages/database/src:/app/packages/database/src:ro
+      - ./packages/database/prisma:/app/packages/database/prisma:ro
+      - ./packages/shared/src:/app/packages/shared/src:ro
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://${POSTGRES_USER:-appi}:${POSTGRES_PASSWORD:-change_me_local}@db:5432/${POSTGRES_DB:-appi}?schema=public
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:-dev_jwt_secret_min_32_characters_long}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-dev_refresh_secret_min_32_chars}
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@appi.local}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-AdminChangeMe123!}
+      SEED_ADMIN_NAME: ${SEED_ADMIN_NAME:-APPI Admin}
+    networks: [appi_dev]
+
+  frontend:
+    build:
+      target: development
+    command: ["pnpm", "exec", "next", "dev", "-p", "3000"]
+    ports:
+      - "${FRONTEND_PORT:-3010}:3000"
+    volumes:
+      - ./apps/frontend/src:/app/apps/frontend/src
+      - ./apps/frontend/public:/app/apps/frontend/public
+      - ./packages/shared/src:/app/packages/shared/src:ro
+    environment:
+      NODE_ENV: development
+      API_INTERNAL_URL: http://api:4000
+      WATCHPACK_POLLING: "true"
+    networks: [appi_dev]
+
+networks:
+  appi_dev:
+    driver: bridge
+
+  # Prod internal network not used in full dev stack
+  internal:
+    internal: false
+  web:
+    driver: bridge

@@ -1,0 +1,31 @@
+{
+  "name": "appi",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm run dev:infra && concurrently -n api,web -c blue,green \"pnpm run dev:api\" \"pnpm run dev:web\"",
+    "dev:full": "pnpm setup && pnpm dev",
+    "dev:api": "pnpm --filter @appi/api dev",
+    "dev:web": "pnpm --filter @appi/frontend dev",
+    "dev:infra": "docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d db redis",
+    "dev:down": "docker compose -f docker-compose.yml -f docker-compose.dev.yml down",
+    "dev:docker": "docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build",
+    "dev:docker:down": "docker compose -f docker-compose.yml -f docker-compose.dev.yml down",
+    "build": "pnpm --filter @appi/database generate && pnpm -r --filter @appi/api --filter @appi/frontend build",
+    "db:generate": "pnpm --filter @appi/database generate",
+    "db:migrate:dev": "pnpm --filter @appi/database migrate:dev",
+    "db:migrate:deploy": "pnpm --filter @appi/database migrate:deploy",
+    "db:seed": "pnpm --filter @appi/database seed",
+    "db:studio": "pnpm --filter @appi/database studio",
+    "setup": "pnpm db:generate && pnpm db:migrate:dev && pnpm db:seed",
+    "lint": "pnpm -r lint",
+    "compose:prod": "docker compose up -d --build",
+    "compose:prod:down": "docker compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

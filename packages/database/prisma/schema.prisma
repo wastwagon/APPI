@@ -1,0 +1,190 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  PARTY_REP
+  FELLOW
+  OBSERVER
+  PUBLIC
+}
+
+enum VerificationStatus {
+  NONE
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum SummitRegistrationStatus {
+  DRAFT
+  SUBMITTED
+  CONFIRMED
+  CANCELLED
+}
+
+enum SiteMode {
+  LIVE
+  UNDER_CONSTRUCTION
+}
+
+enum MediaType {
+  IMAGE
+  DOCUMENT
+  VIDEO
+}
+
+enum NotificationKind {
+  SYSTEM
+  VERIFICATION
+  SUMMIT
+  ANNOUNCEMENT
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  fullName     String?
+  role         UserRole @default(PUBLIC)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  profile              Profile?
+  verifications        MemberVerification[]
+  summitRegistrations  SummitRegistration[]
+  mediaAssets          MediaAsset[]
+  notifications        Notification[]
+}
+
+model Profile {
+  id                 String             @id @default(cuid())
+  userId             String             @unique
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  avatarUrl          String?
+  partyAffiliation   String?
+  country            String?
+  bio                String?
+  phone              String?
+  position           String?
+  organization       String?
+  verificationStatus VerificationStatus @default(NONE)
+}
+
+model MemberVerification {
+  id           String             @id @default(cuid())
+  userId       String
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nationalId   String
+  documentPath String?
+  status       VerificationStatus @default(PENDING)
+  adminNotes   String?
+  submittedAt  DateTime           @default(now())
+  reviewedAt   DateTime?
+
+  @@index([userId])
+  @@index([status])
+}
+
+model SummitRegistration {
+  id              String                   @id @default(cuid())
+  userId          String
+  user            User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  summitYear      String                   @default("2025")
+  organisation    String
+  country         String
+  delegationRole  String?
+  dietaryNotes    String?
+  status          SummitRegistrationStatus @default(SUBMITTED)
+  createdAt       DateTime                 @default(now())
+  updatedAt       DateTime                 @updatedAt
+
+  @@unique([userId, summitYear])
+  @@index([status])
+}
+
+model SiteSettings {
+  id                   String   @id @default("default")
+  siteMode             SiteMode @default(LIVE)
+  constructionTitle    String?  @default("We'll be right back")
+  constructionMessage  String?  @default("We're preparing a new experience for Africa's political parties.")
+  updatedAt            DateTime @updatedAt
+}
+
+model MediaAsset {
+  id           String    @id @default(cuid())
+  type         MediaType
+  title        String?
+  altText      String?
+  caption      String?
+  fileName     String?
+  filePath     String?
+  url          String
+  mimeType     String?
+  fileSize     Int?
+  folder       String    @default("general")
+  youtubeId    String?
+  uploadedById String?
+  uploadedBy   User?     @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([type])
+  @@index([folder])
+  @@index([createdAt])
+}
+
+model FormSubmission {
+  id        String   @id @default(cuid())
+  formType  String
+  payload   Json
+  sourceIp  String?
+  createdAt DateTime @default(now())
+
+  @@index([formType])
+  @@index([createdAt])
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  source    String?
+  createdAt DateTime @default(now())
+}
+
+/// Localized page copy (replaces static messages/*.json for marketing content)
+model CmsPage {
+  id        String   @id @default(cuid())
+  slug      String
+  locale    String
+  fields    Json
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([slug, locale])
+  @@index([locale])
+  @@index([published])
+}
+
+/// In-app notification inbox per user
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind      NotificationKind @default(SYSTEM)
+  title     String
+  body      String
+  href      String?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  @@index([userId, readAt])
+  @@index([userId, createdAt])
+}

@@ -1,0 +1,147 @@
+# Production stack for Coolify / VPS — frontend + API + Postgres + Redis
+# Coolify: New Resource → Docker Compose → Repository https://github.com/wastwagon/APPI
+# Compose path: docker-compose.yml | Expose domain on service: frontend (port 3000)
+
+name: appi
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-appi}
+      POSTGRES_USER: ${POSTGRES_USER:-appi}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-appi} -d ${POSTGRES_DB:-appi}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    networks: [internal]
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks: [internal]
+
+  migrate:
+    build:
+      context: .
+      dockerfile: docker/migrate.Dockerfile
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: 'no'
+    networks: [internal]
+
+  seed:
+    build:
+      context: .
+      dockerfile: docker/seed.Dockerfile
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      NODE_ENV: production
+      SEED_ADMIN_ENABLED: ${SEED_ADMIN_ENABLED:-false}
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@appi.local}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-}
+      SEED_ADMIN_NAME: ${SEED_ADMIN_NAME:-APPI Admin}
+      SEED_MEMBER_EMAIL: ${SEED_MEMBER_EMAIL:-}
+      SEED_MEMBER_PASSWORD: ${SEED_MEMBER_PASSWORD:-}
+      SEED_MEMBER_NAME: ${SEED_MEMBER_NAME:-Demo Member}
+      UPLOAD_DIR: /data/uploads
+    volumes:
+      - uploads_data:/data/uploads
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: 'no'
+    networks: [internal]
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+      target: runner
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      HOST: 0.0.0.0
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:?Set JWT_REFRESH_SECRET}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
+      ADMIN_API_KEY: ${ADMIN_API_KEY:-}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      FORM_FROM_EMAIL: ${FORM_FROM_EMAIL:-}
+      FORM_TO_EMAIL: ${FORM_TO_EMAIL:-}
+      UPLOAD_DIR: /data/uploads
+      CURRENT_SUMMIT_YEAR: ${CURRENT_SUMMIT_YEAR:-2025}
+    volumes:
+      - uploads_data:/data/uploads
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:4000/health || exit 1']
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+    networks: [internal]
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+      target: runner
+      args:
+        API_INTERNAL_URL: http://api:4000
+    ports:
+      - '${COOLIFY_PORT:-3000}:3000'
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOSTNAME: 0.0.0.0
+      API_INTERNAL_URL: http://api:4000
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET:-}
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1:3000/api/health || exit 1']
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+    networks: [internal, web]
+
+networks:
+  internal:
+    driver: bridge
+  web:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  uploads_data:

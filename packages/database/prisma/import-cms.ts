@@ -1,0 +1,99 @@
+import { readFile } from 'fs/promises'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import type { PrismaClient } from '@prisma/client'
+
+const LOCALES = ['en', 'fr', 'ar'] as const
+
+const here = path.dirname(fileURLToPath(import.meta.url))
+const repoRoot = path.resolve(here, '../../..')
+const messagesDir = path.join(repoRoot, 'apps/frontend/messages')
+
+export type CmsImportEntry = { slug: string; fields: Record<string, unknown> }
+
+/** Collect CMS pages from nested message objects (content.*, pages.*, home). */
+export function collectCmsPages(
+  obj: Record<string, unknown>,
+  baseSlug: string,
+  acc: CmsImportEntry[]
+): void {
+  for (const [key, val] of Object.entries(obj)) {
+    if (val === null || typeof val !== 'object' || Array.isArray(val)) continue
+    const record = val as Record<string, unknown>
+    const slug = `${baseSlug}.${key}`
+    const hasNestedSection = Object.values(record).some(
+      (v) => typeof v === 'object' && v !== null && !Array.isArray(v)
+    )
+    if (hasNestedSection) {
+      acc.push({ slug, fields: record })
+    } else {
+      acc.push({ slug, fields: record })
+    }
+  }
+}
+
+function collectContentRoot(content: Record<string, unknown>): CmsImportEntry[] {
+  const acc: CmsImportEntry[] = []
+  for (const [section, val] of Object.entries(content)) {
+    if (val === null || typeof val !== 'object' || Array.isArray(val)) continue
+    const record = val as Record<string, unknown>
+    if (section === 'brief' || section === 'forms' || section === 'faq') {
+      acc.push({ slug: `content.${section}`, fields: record })
+      continue
+    }
+    collectCmsPages(record, `content.${section}`, acc)
+  }
+  return acc
+}
+
+async function loadJson(filePath: string): Promise<Record<string, unknown>> {
+  const raw = await readFile(filePath, 'utf8')
+  return JSON.parse(raw) as Record<string, unknown>
+}
+
+export async function loadLocaleCmsEntries(locale: string): Promise<CmsImportEntry[]> {
+  const basePath = path.join(messagesDir, `${locale}.json`)
+  const contentPath = path.join(messagesDir, locale, 'content.json')
+
+  const [base, contentFile] = await Promise.all([
+    loadJson(basePath),
+    loadJson(contentPath).catch(() => ({ content: {} })),
+  ])
+
+  const entries: CmsImportEntry[] = []
+
+  const content = (contentFile.content ?? contentFile) as Record<string, unknown>
+  entries.push(...collectContentRoot(content))
+
+  if (base.pages && typeof base.pages === 'object') {
+    collectCmsPages(base.pages as Record<string, unknown>, 'pages', entries)
+  }
+
+  if (base.home && typeof base.home === 'object') {
+    entries.push({ slug: 'home', fields: base.home as Record<string, unknown> })
+  }
+
+  for (const key of ['nav', 'footer', 'shell', 'forms', 'media'] as const) {
+    if (base[key] && typeof base[key] === 'object') {
+      entries.push({ slug: key, fields: base[key] as Record<string, unknown> })
+    }
+  }
+
+  return entries
+}
+
+export async function importCmsFromMessages(prisma: PrismaClient): Promise<number> {
+  let count = 0
+  for (const locale of LOCALES) {
+    const entries = await loadLocaleCmsEntries(locale)
+    for (const { slug, fields } of entries) {
+      await prisma.cmsPage.upsert({
+        where: { slug_locale: { slug, locale } },
+        create: { slug, locale, fields, published: true },
+        update: { fields, published: true },
+      })
+      count++
+    }
+  }
+  return count
+}

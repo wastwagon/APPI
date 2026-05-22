@@ -1,0 +1,218 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper text-ink antialiased;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent-blue;
+  }
+
+  [dir='rtl'] .nav-flyout {
+    @apply left-auto right-0;
+  }
+
+  ::selection {
+    @apply bg-accent-blue/20 text-ink;
+  }
+}
+
+@layer components {
+  .site-container {
+    @apply mx-auto w-full max-w-site px-4 sm:px-6 lg:px-8;
+  }
+
+  .eyebrow {
+    @apply text-[0.6875rem] font-semibold uppercase tracking-[0.2em] text-accent-warm;
+  }
+
+  .card-premium {
+    @apply rounded-2xl border border-edge/80 bg-paper-elevated shadow-soft transition-all duration-300;
+  }
+
+  .card-premium:hover {
+    @apply border-accent-blue/20 shadow-lift -translate-y-0.5;
+  }
+
+  .input-field {
+    @apply w-full min-h-[44px] rounded-xl border border-edge bg-paper-elevated px-4 py-3 text-base text-ink shadow-sm transition-[border-color,box-shadow] placeholder:text-ink-faint focus:border-accent-blue/50 focus:outline-none focus:ring-2 focus:ring-accent-blue/15 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  textarea.input-field {
+    @apply min-h-[7rem] resize-y py-3 leading-relaxed;
+  }
+
+  select.input-field {
+    @apply cursor-pointer appearance-none bg-[length:1rem] bg-[right_0.75rem_center] bg-no-repeat pe-10 ps-4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235c6570' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  }
+
+  [dir='rtl'] select.input-field {
+    @apply bg-[left_0.75rem_center] pe-4 ps-10;
+  }
+
+  .nav-flyout {
+    @apply absolute left-0 top-full z-50 mt-2 min-w-[16rem] rounded-2xl border border-edge/80 bg-paper-elevated p-2 shadow-nav opacity-0 invisible translate-y-1 transition-all duration-200 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0;
+  }
+
+  /* Forms */
+  .form-card {
+    @apply overflow-hidden rounded-2xl border border-edge/80 bg-paper-white shadow-card;
+  }
+
+  /* Dashboards */
+  .dash-shell {
+    @apply min-h-screen bg-paper;
+  }
+
+  .dash-shell-header {
+    @apply sticky top-0 z-40 border-b border-edge/80 bg-paper-white/95 backdrop-blur-md;
+  }
+
+  .dash-nav-link {
+    @apply flex shrink-0 items-center gap-2.5 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors;
+  }
+
+  .dash-nav-link-active {
+    @apply bg-accent-blue text-white shadow-soft;
+  }
+
+  .dash-nav-link-idle {
+    @apply text-ink-muted hover:bg-paper-white hover:text-ink;
+  }
+
+  .dash-stat-card {
+    @apply rounded-2xl border border-edge/80 bg-paper-white p-6 shadow-soft transition-all duration-300 hover:border-accent-blue/20 hover:shadow-lift;
+  }
+
+  .dash-panel {
+    @apply rounded-2xl border border-edge/80 bg-paper-white shadow-soft;
+  }
+
+  .data-panel {
+    @apply overflow-hidden rounded-2xl border border-edge/80 bg-paper-white shadow-soft;
+  }
+
+  .data-table {
+    @apply w-full min-w-[32rem] text-left text-sm;
+  }
+
+  .data-table thead {
+    @apply border-b border-edge bg-paper/80 text-xs font-semibold uppercase tracking-wider text-ink-muted;
+  }
+
+  .data-table th {
+    @apply px-4 py-3.5;
+  }
+
+  .data-table td {
+    @apply border-b border-edge/50 px-4 py-3.5 align-top;
+  }
+
+  .data-table tbody tr:last-child td {
+    @apply border-b-0;
+  }
+
+  .data-table tbody tr:hover {
+    @apply bg-paper/50;
+  }
+
+  .empty-state {
+    @apply rounded-2xl border border-dashed border-edge bg-paper-white/60 px-6 py-14 text-center text-sm text-ink-muted;
+  }
+
+  /* Auth */
+  .auth-page {
+    @apply relative flex min-h-screen flex-col items-center justify-center px-4 py-12;
+  }
+
+  .auth-page-bg {
+    @apply pointer-events-none absolute inset-0 bg-page-accent;
+    background-image:
+      radial-gradient(ellipse 70% 50% at 50% -10%, rgba(13, 92, 99, 0.12), transparent),
+      radial-gradient(ellipse 40% 30% at 100% 80%, rgba(196, 92, 38, 0.08), transparent);
+  }
+
+  .auth-card {
+    @apply rounded-2xl border border-edge/80 bg-paper-white p-8 shadow-card sm:p-10;
+  }
+
+  /* Member dashboard cards */
+  .member-card {
+    @apply rounded-2xl border border-edge/80 bg-paper-white p-6 shadow-soft transition-shadow hover:shadow-card;
+  }
+
+  .member-card-highlight {
+    @apply relative overflow-hidden rounded-2xl border border-edge/80 bg-gradient-to-br from-accent-blue via-[#0c4568] to-accent-teal p-8 text-white shadow-lift;
+  }
+
+  .member-card-highlight::after {
+    content: '';
+    @apply pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-white/10 blur-2xl;
+  }
+
+  .locale-pill {
+    @apply rounded-full border border-edge bg-paper-white px-4 py-1.5 text-sm font-semibold uppercase tracking-wide text-ink-muted transition-colors hover:text-ink;
+  }
+
+  .locale-pill-active {
+    @apply border-accent-blue bg-accent-blue text-white shadow-soft;
+  }
+
+  .media-card {
+    @apply overflow-hidden rounded-2xl border border-edge/80 bg-paper-white shadow-soft transition-shadow hover:shadow-card;
+  }
+
+  /* TipTap CMS editor */
+  .tiptap-editor-content p.is-editor-empty:first-child::before {
+    color: theme('colors.ink.faint');
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .ProseMirror-focused {
+    @apply outline-none;
+  }
+}
+
+@layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
