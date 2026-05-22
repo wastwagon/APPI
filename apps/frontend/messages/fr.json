@@ -88,7 +88,40 @@
     "ctaTitle": "Façonner l'avenir de la politique partisane en Afrique",
     "ctaDesc": "Rejoignez les dialogues, programmes et le sommet continental.",
     "ctaContact": "Contacter le secrétariat",
-    "ctaSummit": "Sommet 2025"
+    "ctaSummit": "Sommet 2025",
+    "insights": {
+      "eyebrow": "Actualités",
+      "title": "Mises à jour et publications",
+      "viewAll": "Voir toutes les actualités",
+      "readMore": "En savoir plus",
+      "card1": {
+        "badge": "Nouvelles APPI",
+        "date": "12 août 2026",
+        "title": "L'APPI annonce la feuille de route du sommet continental et les priorités stratégiques",
+        "text": "L'Initiative présente un agenda pratique pour renforcer les institutions partisanes, la redevabilité démocratique et la mise en œuvre des politiques en Afrique."
+      },
+      "card2": {
+        "badge": "Publications",
+        "date": "13 août 2026",
+        "title": "Nouvelle note de politique sur la réforme des partis et la démocratie interne",
+        "text": "La note résume les enseignements des États membres et propose des mesures concrètes pour les statuts, les primaires et les mécanismes de règlement des différends."
+      },
+      "card3": {
+        "badge": "Engagement",
+        "date": "14 août 2026",
+        "title": "Extension des dialogues de réforme au niveau national dans de nouveaux États partenaires",
+        "text": "L'APPI étend les dialogues de réforme collaboratifs pour soutenir la stabilité politique et une gouvernance inclusive."
+      }
+    },
+    "contact": {
+      "title": "Joindre le secrétariat",
+      "lead": "Pour les partenariats, la coordination médias, l'engagement dans les programmes et les demandes générales, contactez le secrétariat APPI. Réponse sous quelques jours ouvrables.",
+      "cta": "Envoyer un message",
+      "formEyebrow": "Des questions ?",
+      "formTitle": "Envoyez-nous un message",
+      "formLead": "Utilisez le formulaire pour les demandes institutionnelles, médias et partenariats.",
+      "formCta": "Ouvrir le formulaire de contact"
+    }
   },
   "footer": {
     "title": "Initiative des partis politiques africains",
@@ -168,6 +201,7 @@
       "secretariat": { "title": "Secrétariat", "description": "Demandes générales, partenariats et coordination." },
       "mediation": { "title": "Médiation", "description": "Facilitation de dialogue et demandes de médiation." },
       "socialChannels": { "title": "Web et réseaux", "description": "Site officiel et liens institutionnels." },
+      "formTitle": "Envoyez-nous un message",
       "name": "Nom complet",
       "email": "Adresse e-mail",
       "message": "Votre message",
