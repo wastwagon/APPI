@@ -31,6 +31,8 @@ COPY --from=deps /app/packages/database/node_modules ./packages/database/node_mo
 COPY --from=deps /app/packages/shared/node_modules ./packages/shared/node_modules
 COPY . .
 RUN pnpm --filter @appi/database generate
+RUN pnpm --filter @appi/database build
+RUN pnpm --filter @appi/shared build
 RUN pnpm --filter @appi/api build
 
 FROM base AS runner

@@ -201,6 +201,7 @@
       "secretariat": { "title": "Secretariat", "description": "General enquiries, partnerships, and programme coordination." },
       "mediation": { "title": "Mediation", "description": "Dialogue facilitation and mediation requests." },
       "socialChannels": { "title": "Social & web", "description": "Official programme site and institutional links." },
+      "formTitle": "Send us a message",
       "name": "Full name",
       "email": "Email address",
       "message": "Your message",

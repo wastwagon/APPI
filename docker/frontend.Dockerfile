@@ -28,8 +28,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/apps/frontend/node_modules ./apps/frontend/node_modules
 COPY --from=deps /app/packages/shared/node_modules ./packages/shared/node_modules
 COPY . .
-ARG API_INTERNAL_URL=http://api:4000
-ENV API_INTERNAL_URL=$API_INTERNAL_URL
+ENV API_INTERNAL_URL=http://api:4000
 RUN pnpm --filter @appi/frontend build
 
 FROM base AS runner

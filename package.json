@@ -11,7 +11,7 @@
     "dev:down": "docker compose -f docker-compose.yml -f docker-compose.dev.yml down",
     "dev:docker": "docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build",
     "dev:docker:down": "docker compose -f docker-compose.yml -f docker-compose.dev.yml down",
-    "build": "pnpm --filter @appi/database generate && pnpm -r --filter @appi/api --filter @appi/frontend build",
+    "build": "pnpm --filter @appi/database generate && pnpm --filter @appi/database build && pnpm --filter @appi/shared build && pnpm -r --filter @appi/api --filter @appi/frontend build",
     "db:generate": "pnpm --filter @appi/database generate",
     "db:migrate:dev": "pnpm --filter @appi/database migrate:dev",
     "db:migrate:deploy": "pnpm --filter @appi/database migrate:deploy",

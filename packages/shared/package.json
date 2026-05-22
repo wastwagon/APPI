@@ -3,14 +3,29 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./schemas/forms": "./src/schemas/forms.ts",
-    "./schemas/auth": "./src/schemas/auth.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./schemas/forms": {
+      "types": "./dist/schemas/forms.d.ts",
+      "import": "./dist/schemas/forms.js"
+    },
+    "./schemas/auth": {
+      "types": "./dist/schemas/auth.d.ts",
+      "import": "./dist/schemas/auth.js"
+    }
+  },
+  "scripts": {
+    "build": "pnpm exec tsc"
   },
   "dependencies": {
     "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
   }
 }
