@@ -111,7 +111,7 @@ cp .env.coolify.example .env
 docker compose up -d --build
 ```
 
-Site: http://localhost:3000 (or `COOLIFY_PORT`).
+Site: http://localhost:3000 — run with `FRONTEND_PUBLISH_PORT=3000 docker compose up -d --build`.
 
 ---
 
@@ -125,6 +125,7 @@ Site: http://localhost:3000 (or `COOLIFY_PORT`).
 | Admin login fails | Was `SEED_ADMIN_ENABLED=true` on first deploy? Password in Coolify env |
 | CORS errors | `CORS_ORIGIN` must match `NEXT_PUBLIC_SITE_URL` exactly (https, no trailing slash) |
 | Uploads missing after redeploy | Ensure `uploads_data` volume is attached to **api** |
+| `port is already allocated` on 3000 | Remove `COOLIFY_PORT` / `FRONTEND_PUBLISH_PORT` from Coolify env; redeploy (compose no longer binds host :3000 by default). Or stop the other container using 3000: `docker ps --filter publish=3000` |
 
 ---
 

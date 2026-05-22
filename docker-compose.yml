@@ -85,8 +85,12 @@ services:
       target: runner
       args:
         API_INTERNAL_URL: http://api:4000
+    # Do not bind host port 3000 — Coolify proxy reaches container port 3000 on the Docker network.
+    # For local access: FRONTEND_PUBLISH_PORT=3000 docker compose up -d
+    expose:
+      - '3000'
     ports:
-      - '${COOLIFY_PORT:-3000}:3000'
+      - '${FRONTEND_PUBLISH_PORT:-}:${FRONTEND_CONTAINER_PORT:-3000}'
     environment:
       NODE_ENV: production
       PORT: 3000
