@@ -48,8 +48,9 @@
   },
   "home": {
     "eyebrow": "APPI",
-    "title": "Réforme des partis pour la transformation démocratique",
-    "subtitle": "Gouvernance, redevabilité et leadership inclusif à travers l'Afrique.",
+    "title": "Initiative des partis politiques africains",
+    "subtitle": "Repenser les partis politiques africains pour la transformation démocratique et économique",
+    "tagline": "Du vote à la gouvernance — Renforcer les partis pour le développement durable en Afrique",
     "discoverAppi": "À propos",
     "summitCta": "Sommet",
     "slide2": {
@@ -68,8 +69,15 @@
     "statLiveMembers": "Comptes membres",
     "statLiveSummit": "Inscriptions au sommet",
     "statLiveLeads": "Demandes reçues",
-    "aboutTitle": "Pourquoi l'APPI compte pour la transformation démocratique",
-    "aboutLead": "L'APPI répond aux pressions démocratiques en renforçant la gouvernance interne des partis, la redevabilité et le lien entre leadership politique et mise en œuvre des politiques.",
+    "aboutTitle": "Plateforme continentale pour la transformation politique",
+    "aboutLead": "L'Initiative des partis politiques africains (APPI) est une plateforme continentale qui repositionne les partis comme institutions centrales de gouvernance, d'élaboration des politiques et de transformation nationale.",
+    "aboutPara2": "Face aux pressions démocratiques en Afrique, l'APPI offre une réponse stratégique en unissant dirigeants, institutions et citoyens autour d'une vision de systèmes politiques plus forts et orientés vers le développement.",
+    "aboutPara3": "Ancrée par l'Africa Governance Centre (AGC), l'APPI soutient la réforme politique structurée, la démocratie intra-partisane, le leadership et la collaboration entre partis et institutions publiques.",
+    "aboutPoint1": "Renforcer la gouvernance interne et la redevabilité des partis",
+    "aboutPoint2": "Combler l'écart entre leadership politique et mise en œuvre des politiques",
+    "aboutPoint3": "Favoriser la collaboration interpartisane sur la gouvernance et l'économie",
+    "aboutPoint4": "Former la prochaine génération de leaders politiques éthiques",
+    "aboutPoint5": "Promouvoir la paix, le dialogue et la résilience démocratique",
     "aboutFeature1": "Gouvernance intra-partisane",
     "aboutFeature2": "Collaboration politique et leadership",
     "aboutBadge": "Réseau continental",
@@ -83,6 +91,8 @@
     "pillarReformDesc": "Plateformes nationales pour l'amélioration de la gouvernance.",
     "pillarInclusive": "Leadership inclusif",
     "pillarInclusiveDesc": "Espaces pour la jeunesse, les femmes et les groupes marginalisés.",
+    "pillarWorkingGroups": "Groupes de travail thématiques",
+    "pillarWorkingGroupsDesc": "Plateformes interpartis pour l'échange de connaissances et la conception de politiques.",
     "pillarAfcta": "Engagement ZLECAf",
     "pillarAfctaDesc": "Aligner les partis sur la transformation commerciale continentale.",
     "ctaTitle": "Façonner l'avenir de la politique partisane en Afrique",
@@ -107,10 +117,10 @@
         "text": "La note résume les enseignements des États membres et propose des mesures concrètes pour les statuts, les primaires et les mécanismes de règlement des différends."
       },
       "card3": {
-        "badge": "Engagement",
-        "date": "14 août 2026",
-        "title": "Extension des dialogues de réforme au niveau national dans de nouveaux États partenaires",
-        "text": "L'APPI étend les dialogues de réforme collaboratifs pour soutenir la stabilité politique et une gouvernance inclusive."
+        "badge": "Événements",
+        "date": "12–14 août 2025",
+        "title": "Sommet des partis politiques africains 2025 (APPS)",
+        "text": "Convening phare à Accra — chefs d’État, dirigeants de partis et penseurs politiques."
       }
     },
     "contact": {
@@ -229,8 +239,23 @@
     "download": "Télécharger",
     "watch": "Voir sur YouTube",
     "noAssets": "Aucun média dans cette section.",
+    "coverageHeading": "Couverture médiatique récente",
+    "coverageFootnote": "Votre média a couvert l'APPI ? Contactez le secrétariat pour une éventuelle mise en avant.",
     "pressTitle": "Presse et médias",
     "pressDesc": "Photos, notes et vidéos des programmes APPI."
+  },
+  "insightsList": {
+    "readStory": "Lire l'article"
+  },
+  "pressMedia": {
+    "title": "Demandes médias",
+    "description": "Pour les interviews, demandes presse ou supports, contactez l'équipe communication de l'APPI via le secrétariat.",
+    "contactCta": "Contacter l'équipe médias",
+    "kitCta": "Boîte à outils médias"
+  },
+  "socialChannels": {
+    "title": "Suivre l'APPI",
+    "description": "Canaux officiels pour les actualités du programme, du sommet et du dialogue continental."
   },
   "common": {
     "readMore": "En savoir plus",

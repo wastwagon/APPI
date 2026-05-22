@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import { footerLinks } from '@/config/navigation'
+import { siteConfig } from '@/lib/site'
 import { Link } from '@/i18n/navigation'
 import { SiteContainer } from './site-container'
 import { NewsletterSignup } from './newsletter-signup'
@@ -24,6 +25,19 @@ export function SiteFooter() {
               {t('memberPortal')} →
             </Link>
             <NewsletterSignup />
+            <div className="mt-8 space-y-1 text-sm text-white/60">
+              <p>
+                <a href={`mailto:${siteConfig.email}`} className="hover:text-white">
+                  {siteConfig.email}
+                </a>
+              </p>
+              <p>
+                <a href={`tel:${siteConfig.phoneTel}`} className="hover:text-white">
+                  {siteConfig.phoneDisplay}
+                </a>
+              </p>
+              <p className="max-w-xs leading-relaxed">{siteConfig.address}</p>
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-8">
             <div>

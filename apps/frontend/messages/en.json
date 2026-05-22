@@ -48,8 +48,9 @@
   },
   "home": {
     "eyebrow": "APPI",
-    "title": "Party reform for democratic transformation",
-    "subtitle": "Stronger governance, accountability, and inclusive leadership across Africa.",
+    "title": "African Political Parties Initiative",
+    "subtitle": "Reshaping Africa's Political Parties for Democratic and Economic Transformation",
+    "tagline": "From the Ballot to Governance — Strengthening Political Parties for Sustainable Development in Africa",
     "discoverAppi": "About APPI",
     "summitCta": "Summit",
     "stat1": "30+",
@@ -62,8 +63,15 @@
     "statLiveMembers": "Member accounts",
     "statLiveSummit": "Summit registrations",
     "statLiveLeads": "Inquiries received",
-    "aboutTitle": "Why APPI Matters for Democratic Transformation",
-    "aboutLead": "APPI provides a strategic response to democratic pressures by strengthening internal party governance, promoting accountability, and connecting political leadership to policy delivery.",
+    "aboutTitle": "Continental Platform for Political Transformation",
+    "aboutLead": "The African Political Parties Initiative (APPI) is a continental platform committed to repositioning political parties as central institutions for governance, policy development, and national transformation.",
+    "aboutPara2": "At a time when democratic systems across Africa face profound pressures, APPI provides a strategic response—uniting political leaders, institutions, and citizens around a shared vision for stronger, more accountable, and development-driven political systems.",
+    "aboutPara3": "Anchored by the Africa Governance Centre (AGC), APPI supports structured political reform, promotes intra-party democracy, advances leadership development, and facilitates collaboration between political parties and public institutions.",
+    "aboutPoint1": "Strengthening internal party governance and accountability",
+    "aboutPoint2": "Bridging the gap between political leadership and policy delivery",
+    "aboutPoint3": "Fostering cross-party collaboration on governance and economic transformation",
+    "aboutPoint4": "Building the next generation of visionary, ethical political leaders",
+    "aboutPoint5": "Promoting peace, dialogue, and democratic resilience across the continent",
     "aboutFeature1": "Intra-Party Governance",
     "aboutFeature2": "Policy Collaboration & Leadership",
     "aboutBadge": "APPI Continental network",
@@ -77,6 +85,8 @@
     "pillarReformDesc": "Country-level platforms that strengthen political dialogue, institutional reforms, and governance outcomes.",
     "pillarInclusive": "Inclusive Leadership",
     "pillarInclusiveDesc": "Dedicated spaces for youth, women, and marginalized voices in democratic leadership processes.",
+    "pillarWorkingGroups": "Thematic working groups",
+    "pillarWorkingGroupsDesc": "Cross-party platforms for knowledge exchange and policy design.",
     "pillarAfcta": "AfCFTA engagement",
     "pillarAfctaDesc": "Aligning parties with continental trade transformation.",
     "ctaTitle": "Shape the future of party politics in Africa",
@@ -95,22 +105,22 @@
       "viewAll": "View all insights",
       "readMore": "Read more",
       "card1": {
-        "badge": "APPI News",
-        "date": "12 August, 2026",
-        "title": "APPI Announces Continental Summit Roadmap and Strategic Priorities",
-        "text": "The Initiative outlines a practical agenda to strengthen party institutions, democratic accountability, and policy delivery across Africa."
+        "badge": "Press",
+        "date": "March 15, 2024",
+        "title": "APPI Launches New Youth Leadership Initiative",
+        "text": "The African Political Parties Initiative announces a comprehensive program to empower young political leaders across the continent."
       },
       "card2": {
         "badge": "Publications",
-        "date": "13 August, 2026",
-        "title": "New Policy Brief on Political Party Reform and Intra-Party Democracy",
-        "text": "The brief summarises lessons from member states and suggests concrete steps for charters, primaries, and internal dispute mechanisms."
+        "date": "March 2024",
+        "title": "Democratic Governance in Africa: Challenges and Opportunities",
+        "text": "An analysis of current democratic governance challenges across Africa and recommendations for strengthening political institutions."
       },
       "card3": {
-        "badge": "Engagement",
-        "date": "14 August, 2026",
-        "title": "Country-Level Reform Dialogues Expanded Across New Partner States",
-        "text": "APPI scales collaborative reform dialogues to support long-term political stability and inclusive governance processes."
+        "badge": "Events",
+        "date": "August 12–14, 2025",
+        "title": "African Political Parties Summit 2025 (APPS)",
+        "text": "Flagship continental convening in Accra, Ghana — heads of state, party leaders, and political thinkers."
       }
     },
     "contact": {
@@ -229,8 +239,23 @@
     "download": "Download",
     "watch": "Watch on YouTube",
     "noAssets": "No media assets in this section yet.",
+    "coverageHeading": "Recent media coverage",
+    "coverageFootnote": "Covered APPI in your outlet? Contact the secretariat and we may feature your story here.",
     "pressTitle": "Press & media",
     "pressDesc": "Photos, briefs, and video from APPI programmes and events."
+  },
+  "insightsList": {
+    "readStory": "Read story"
+  },
+  "pressMedia": {
+    "title": "Media inquiries",
+    "description": "For media inquiries, interviews, or press materials, contact the APPI communications team via the secretariat.",
+    "contactCta": "Contact media team",
+    "kitCta": "Media toolkit"
+  },
+  "socialChannels": {
+    "title": "Follow APPI",
+    "description": "Official social channels for programme updates, summit news, and continental dialogue."
   },
   "common": {
     "readMore": "Read more",

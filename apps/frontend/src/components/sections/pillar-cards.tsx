@@ -1,12 +1,13 @@
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
-import { ArrowRight, GraduationCap, Users, MessageSquare, Handshake, Building2 } from 'lucide-react'
+import { ArrowRight, GraduationCap, Users, Users2, MessageSquare, Handshake, Building2 } from 'lucide-react'
 import { SectionBlock } from '@/components/layout/section-block'
 import { SectionHeader } from '@/components/layout/section-header'
 
 const pillars = [
   { key: 'pillarSummit', descKey: 'pillarSummitDesc', href: '/platforms/summit', icon: Users },
   { key: 'pillarAcademy', descKey: 'pillarAcademyDesc', href: '/platforms/academy', icon: GraduationCap },
+  { key: 'pillarWorkingGroups', descKey: 'pillarWorkingGroupsDesc', href: '/platforms/working-groups', icon: Users2 },
   { key: 'pillarReform', descKey: 'pillarReformDesc', href: '/platforms/reform-dialogues', icon: MessageSquare },
   { key: 'pillarInclusive', descKey: 'pillarInclusiveDesc', href: '/platforms/inclusive-leadership', icon: Handshake },
   { key: 'pillarAfcta', descKey: 'pillarAfctaDesc', href: '/engagement/ctpe-afcfta', icon: Building2 },
@@ -18,7 +19,7 @@ export async function PillarCards() {
   return (
     <SectionBlock tone="muted" className="!bg-paper">
       <SectionHeader eyebrow={t('pillarsEyebrow')} title={t('pillarsTitle')} />
-      <div className="mt-10 flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] lg:grid lg:grid-cols-3 lg:gap-5 lg:overflow-visible [&::-webkit-scrollbar]:hidden">
+      <div className="mt-10 flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] lg:grid lg:grid-cols-3 lg:gap-5 xl:grid-cols-3 lg:overflow-visible [&::-webkit-scrollbar]:hidden">
         {pillars.map((pillar, i) => (
           <Link
             key={pillar.href}

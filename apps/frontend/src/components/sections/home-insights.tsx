@@ -9,7 +9,7 @@ import { legacyImages } from '@/lib/legacy-images'
 const cards = [
   { key: 'card1', image: legacyImages.appiLaunch, href: '/insights/press' },
   { key: 'card2', image: legacyImages.thematicGroups, href: '/insights/publications' },
-  { key: 'card3', image: legacyImages.reformDialogues, href: '/platforms/reform-dialogues' },
+  { key: 'card3', image: legacyImages.summit, href: '/summit' },
 ] as const
 
 export async function HomeInsights() {

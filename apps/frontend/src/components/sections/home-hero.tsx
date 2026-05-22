@@ -35,6 +35,7 @@ export async function HomeHero() {
     {
       eyebrow: t('eyebrow'),
       title: t('title'),
+      titleAccent: t.has('tagline') ? t('tagline') : undefined,
       subtitle: t('subtitle'),
       primaryCta: t('discoverAppi'),
       primaryHref: '/about',

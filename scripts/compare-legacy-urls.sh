@@ -5,6 +5,7 @@ NEW="${NEW_URL:-http://127.0.0.1:3010}"
 
 paths=(
   "/"
+  "/home"
   "/about" "/about/who-we-are" "/about/strategic-objectives" "/about/leadership" "/about/framework" "/about/declarations"
   "/faq"
   "/platforms" "/platforms/academy" "/platforms/summit" "/platforms/working-groups" "/platforms/reform-dialogues"
@@ -24,6 +25,7 @@ for p in "${paths[@]}"; do
   note=""
   if [ "$p" = "/contact-us" ] && [ "$n" = "308" ] || [ "$n" = "301" ]; then note="redirect OK"
   elif [ "$p" = "/about-us" ] && [ "$n" = "308" ] || [ "$n" = "301" ]; then note="redirect OK"
+  elif [ "$p" = "/home" ] && [ "$n" = "308" ] || [ "$n" = "301" ]; then note="redirect OK"
   elif [ "$o" != "$n" ]; then note="DIFF"
   fi
   printf "%-42s %7s %7s %s\n" "$p" "$o" "$n" "$note"

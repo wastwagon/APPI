@@ -32,7 +32,7 @@ export async function HomeContact() {
             </li>
             <li className="flex gap-4">
               <MapPin className="h-5 w-5 shrink-0 text-accent-blue" aria-hidden />
-              <span className="text-sm text-ink-muted">{siteConfig.locationSummary}</span>
+              <span className="text-sm text-ink-muted">{siteConfig.address}</span>
             </li>
           </ul>
           <Button asChild variant="primary" className="mt-8">

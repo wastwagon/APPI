@@ -1,5 +1,5 @@
-import { InsightsDetail } from '@/components/content/insights-detail'
+import { InsightsCatalogPage } from '@/components/content/insights-catalog-page'
 
 export default function EventsPage() {
-  return <InsightsDetail slug="events" />
+  return <InsightsCatalogPage catalogSlug="events" />
 }

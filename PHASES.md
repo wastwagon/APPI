@@ -117,7 +117,7 @@ Set secrets in Coolify from `.env.example`. Only **frontend** is public; **api**
 - [ ] Coolify domain + SSL
 - [ ] Postgres backups
 - [ ] Redirect map from old URLs
-- [ ] Retire `APPI/source` template stack
+- [x] Retire legacy Vercel / Supabase stack (root `app/`, `database/`, Supabase docs removed)
 
 ---
 
@@ -125,11 +125,11 @@ Set secrets in Coolify from `.env.example`. Only **frontend** is public; **api**
 
 ```
 apps/
-  frontend/     # Next.js 15 — premium UI (target)
+  frontend/     # Next.js 15 — public site, admin UI, member portal
   api/          # Fastify + Prisma
 packages/
-  database/     # Prisma schema & migrations
+  database/     # Prisma schema, migrations, seed
   shared/       # Shared types & Zod schemas
 docker/         # Dockerfiles
-app/            # LEGACY — migrate to apps/frontend in Phase 2
+docs/           # Deploy, migration, i18n
 ```

@@ -1,5 +1,11 @@
-import { InsightsDetail } from '@/components/content/insights-detail'
+import { InsightsCatalogPage } from '@/components/content/insights-catalog-page'
+import { PressMediaCta } from '@/components/content/press-media-cta'
 
 export default function PressPage() {
-  return <InsightsDetail slug="press" />
+  return (
+    <>
+      <InsightsCatalogPage catalogSlug="press" />
+      <PressMediaCta />
+    </>
+  )
 }

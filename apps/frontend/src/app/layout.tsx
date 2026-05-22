@@ -19,7 +19,7 @@ const appiSerif = Source_Serif_4({
 export const metadata: Metadata = {
   title: 'APPI — African Political Parties Initiative',
   description:
-    'Continental platform for political party reform, inclusive leadership, and democratic transformation in Africa.',
+    "Reshaping Africa's political parties for democratic and economic transformation — continental platform for party reform, inclusive leadership, and governance.",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

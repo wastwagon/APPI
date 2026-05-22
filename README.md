@@ -13,7 +13,7 @@ pnpm dev            # Docker DB/Redis + API :4000 + frontend :3010
 
 | URL | Purpose |
 |-----|---------|
-| http://localhost:3010 | Public site |
+| http://localhost:3010 | Public site (`apps/frontend` — the only marketing app) |
 | http://localhost:3010/admin/login | Admin dashboard (English UI only) |
 | http://localhost:3010/member/login | Member portal (English UI only) |
 | http://localhost:3010/en/dev/status | Stack health check |
@@ -87,3 +87,6 @@ docker compose up -d --build
 - [PHASES.md](./PHASES.md) — implementation roadmap
 - [docs/I18N.md](./docs/I18N.md) — locales (EN / FR / AR)
 - [docs/LEGACY-DECOMMISSION.md](./docs/LEGACY-DECOMMISSION.md) — migration from legacy stack
+- [docs/MIGRATION-AUDIT.md](./docs/MIGRATION-AUDIT.md) — content/route parity checklist
+- [docs/CONTENT-MIGRATION.md](./docs/CONTENT-MIGRATION.md) — where legacy copy lives in `apps/frontend`
+- [docs/REPO-CLEANUP.md](./docs/REPO-CLEANUP.md) — removed legacy `app/`, Supabase `database/`, old READMEs

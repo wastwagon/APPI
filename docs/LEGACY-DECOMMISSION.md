@@ -19,7 +19,7 @@ Spot-check:
 - [ ] `/platforms/academy` — photo + programme brief bullets
 - [ ] `/contact` + `/contact/secretariat` + `/contact/mediation` + `/contact/social`
 - [ ] `/faq` — 4 questions
-- [ ] `/privacy` + `/terms` — brief layout with image
+- [ ] `/privacy` + `/terms` — full legal text (multi-section; en / fr / ar)
 - [ ] Footer/nav links work
 
 ## Automated route parity
@@ -29,7 +29,9 @@ Spot-check:
 | All programme pages (platforms, about, engagement, insights, summit) | 200 | 200 | Copy in `messages/*/content.json` |
 | `/contact`, `/contact/*` | 200 | 200 | |
 | `/faq` | 200 | 200 | |
-| `/privacy`, `/terms` | 200 | 200 | |
+| `/privacy`, `/terms` | 200 | 200 | Full legal pages (not programme-brief layout) |
+| `/home` | 200 | **301→/** | Redirect in `next.config.mjs` |
+| `/contact/login` | 200 | **301→/member/login** | |
 | `/member/login`, `/member/register`, dashboard, settings | 200 | 200 | New auth UI (not marketing brief) |
 | `/contact-us` | 200 | **301→/contact** | Redirect added in `next.config.mjs` |
 | `/about-us` | 200 | **301→/about** | Template-only legacy page; redirect added |
@@ -37,7 +39,7 @@ Spot-check:
 
 ## Content & assets
 
-- **Copy**: Migrated from legacy `AppiContentPage` pages via `apps/frontend/scripts/generate-legacy-content.mjs`
+- **Copy**: Migrated via `apps/frontend/scripts/generate-legacy-content.mjs` and `insights-catalog/` / `legal-content/` (root legacy `app/` removed from repo)
 - **Images**: Real JPGs in `apps/frontend/public/images/` (legacy `remoteMedia.js` used SVG placeholders at runtime)
 - **Contact**: `appi@africagovernancecentre.org`, `+233 53 054 5528` in `apps/frontend/src/lib/site.ts`
 
@@ -60,6 +62,11 @@ Deleted:
 - `/Users/OceanCyber/Downloads/APPI` (empty parent)
 
 Canonical codebase: **`/Users/OceanCyber/Downloads/APPI-main`** only.
+
+In-repo legacy (also removed — see [REPO-CLEANUP.md](./REPO-CLEANUP.md)):
+
+- Root `app/` Next.js site and scaffold
+- `database/` Supabase SQL + Supabase-era READMEs/scripts
 
 ## Run new stack going forward
 

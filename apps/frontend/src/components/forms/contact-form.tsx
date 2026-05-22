@@ -54,7 +54,7 @@ export function ContactForm() {
             </div>
             <h2 className="mt-4 font-serif text-xl font-semibold text-ink">{t('officeTitle')}</h2>
             <p className="mt-2 text-sm leading-relaxed text-ink-muted">
-              {t('officeDesc')} {siteConfig.locationSummary}
+              {t('officeDesc')} {siteConfig.address}
             </p>
           </div>
           <div className="card-premium flex items-center gap-4 p-6">

@@ -4,8 +4,11 @@ import { Link } from '@/i18n/navigation'
 import { SectionBlock } from '@/components/layout/section-block'
 import { legacyImages } from '@/lib/legacy-images'
 
+const aboutPoints = ['aboutPoint1', 'aboutPoint2', 'aboutPoint3', 'aboutPoint4', 'aboutPoint5'] as const
+
 export async function HomeAbout() {
   const t = await getTranslations('home')
+  const points = aboutPoints.filter((key) => t.has(key))
 
   return (
     <SectionBlock tone="white" className="overflow-hidden">
@@ -42,6 +45,22 @@ export async function HomeAbout() {
             {t('aboutTitle')}
           </h2>
           <p className="mt-5 text-base leading-relaxed text-ink-muted sm:text-lg">{t('aboutLead')}</p>
+          {t.has('aboutPara2') && (
+            <p className="mt-4 text-base leading-relaxed text-ink-muted">{t('aboutPara2')}</p>
+          )}
+          {t.has('aboutPara3') && (
+            <p className="mt-4 text-base leading-relaxed text-ink-muted">{t('aboutPara3')}</p>
+          )}
+          {points.length > 0 && (
+            <ul className="mt-8 space-y-3">
+              {points.map((key) => (
+                <li key={key} className="flex gap-3 text-sm leading-relaxed text-ink-muted sm:text-base">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent-warm" />
+                  {t(key)}
+                </li>
+              ))}
+            </ul>
+          )}
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             <Link
               href="/about"

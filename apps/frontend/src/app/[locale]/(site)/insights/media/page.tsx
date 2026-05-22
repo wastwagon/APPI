@@ -1,12 +1,17 @@
-import { getTranslations } from 'next-intl/server'
-import { ProgrammeBrief } from '@/components/layout/programme-brief'
-import { fetchMediaByFolder, mediaPublicUrl } from '@/lib/media-server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import Image from 'next/image'
 import { Download } from 'lucide-react'
+import { ProgrammeBrief } from '@/components/layout/programme-brief'
+import { InsightsListSection } from '@/components/content/insights-list-section'
+import { getInsightsCatalog } from '@/data/insights-catalog'
+import { fetchMediaByFolder, mediaPublicUrl } from '@/lib/media-server'
 import { YoutubeEmbed } from '@/components/media/youtube-embed'
 
 export default async function InsightsMediaPage() {
+  const locale = await getLocale()
   const t = await getTranslations('media')
+  const coverage = getInsightsCatalog('media', locale)
+
   const [press, videos] = await Promise.all([
     fetchMediaByFolder('press', { take: 24 }),
     fetchMediaByFolder('press', { type: 'video' }),
@@ -21,9 +26,10 @@ export default async function InsightsMediaPage() {
         namespace="content.insights.media"
         eyebrowKey="insights"
         imageKey="appsSummit"
+        compact
       />
 
-      <div className="site-container mx-auto max-w-3xl space-y-10 pb-16">
+      <div className="site-container mx-auto max-w-3xl space-y-10 pb-8">
         {videos.length > 0 && (
           <section>
             <h2 className="font-serif text-xl font-semibold text-ink">{t('videos')}</h2>
@@ -79,6 +85,12 @@ export default async function InsightsMediaPage() {
           <p className="text-center text-sm text-ink-muted">{t('noAssets')}</p>
         )}
       </div>
+
+      <InsightsListSection
+        items={coverage}
+        heading={t('coverageHeading')}
+        footnote={t('coverageFootnote')}
+      />
     </>
   )
 }

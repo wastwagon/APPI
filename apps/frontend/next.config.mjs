@@ -17,8 +17,14 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      { source: '/home', destination: '/', permanent: true },
+      { source: '/contact/login', destination: '/member/login', permanent: true },
       { source: '/contact-us', destination: '/contact', permanent: true },
       { source: '/about-us', destination: '/about', permanent: true },
+      { source: '/summit/about', destination: '/summit', permanent: true },
+      { source: '/summit/next', destination: '/summit/register', permanent: true },
+      { source: '/auth/login', destination: '/member/login', permanent: true },
+      { source: '/contact/forgot-password', destination: '/member/login', permanent: true },
     ]
   },
   async rewrites() {
