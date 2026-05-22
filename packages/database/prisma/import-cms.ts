@@ -1,13 +1,25 @@
+import { existsSync } from 'fs'
 import { readFile } from 'fs/promises'
 import path from 'path'
-import { fileURLToPath } from 'url'
-import type { PrismaClient } from '@prisma/client'
+import type { Prisma, PrismaClient } from '@prisma/client'
 
 const LOCALES = ['en', 'fr', 'ar'] as const
 
-const here = path.dirname(fileURLToPath(import.meta.url))
-const repoRoot = path.resolve(here, '../../..')
-const messagesDir = path.join(repoRoot, 'apps/frontend/messages')
+function findRepoRoot(): string {
+  const candidates = [
+    process.cwd(),
+    path.resolve(process.cwd(), '../..'),
+    path.resolve(process.cwd(), '../../..'),
+  ]
+  for (const root of candidates) {
+    if (existsSync(path.join(root, 'apps/frontend/messages'))) return root
+  }
+  throw new Error('Could not find apps/frontend/messages (repo root)')
+}
+
+function getMessagesDir(): string {
+  return path.join(findRepoRoot(), 'apps/frontend/messages')
+}
 
 export type CmsImportEntry = { slug: string; fields: Record<string, unknown> }
 
@@ -52,6 +64,7 @@ async function loadJson(filePath: string): Promise<Record<string, unknown>> {
 }
 
 export async function loadLocaleCmsEntries(locale: string): Promise<CmsImportEntry[]> {
+  const messagesDir = getMessagesDir()
   const basePath = path.join(messagesDir, `${locale}.json`)
   const contentPath = path.join(messagesDir, locale, 'content.json')
 
@@ -87,10 +100,11 @@ export async function importCmsFromMessages(prisma: PrismaClient): Promise<numbe
   for (const locale of LOCALES) {
     const entries = await loadLocaleCmsEntries(locale)
     for (const { slug, fields } of entries) {
+      const jsonFields = fields as Prisma.InputJsonValue
       await prisma.cmsPage.upsert({
         where: { slug_locale: { slug, locale } },
-        create: { slug, locale, fields, published: true },
-        update: { fields, published: true },
+        create: { slug, locale, fields: jsonFields, published: true },
+        update: { fields: jsonFields, published: true },
       })
       count++
     }

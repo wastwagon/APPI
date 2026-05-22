@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify'
-import { prisma } from '@appi/database'
+import { prisma, type Prisma } from '@appi/database'
 import { cmsPagePatchSchema, cmsPageUpsertSchema, cmsLocaleSchema } from '@appi/shared'
 import { adminPreHandler } from '../plugins/require-admin.js'
 import { importCmsFromMessages } from '@appi/database'
@@ -101,16 +101,17 @@ export async function cmsRoutes(app: FastifyInstance) {
     }
 
     const { slug, locale, fields, published } = parsed.data
+    const jsonFields = fields as Prisma.InputJsonValue
     const page = await prisma.cmsPage.upsert({
       where: { slug_locale: { slug, locale } },
       create: {
         slug,
         locale,
-        fields,
+        fields: jsonFields,
         published: published ?? true,
       },
       update: {
-        fields,
+        fields: jsonFields,
         ...(published !== undefined ? { published } : {}),
       },
     })
@@ -137,7 +138,9 @@ export async function cmsRoutes(app: FastifyInstance) {
     const page = await prisma.cmsPage.update({
       where: { slug_locale: { slug, locale: parsedLocale.data } },
       data: {
-        ...(parsed.data.fields !== undefined ? { fields: parsed.data.fields } : {}),
+        ...(parsed.data.fields !== undefined
+          ? { fields: parsed.data.fields as Prisma.InputJsonValue }
+          : {}),
         ...(parsed.data.published !== undefined ? { published: parsed.data.published } : {}),
       },
     })

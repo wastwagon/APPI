@@ -177,7 +177,7 @@ export async function adminRoutes(app: FastifyInstance) {
 
     const kind = (parsed.data.kind ?? 'ANNOUNCEMENT') as 'SYSTEM' | 'ANNOUNCEMENT' | 'SUMMIT'
 
-    let userIds = parsed.data.userIds ?? []
+    let userIds: string[] = parsed.data.userIds ?? []
     if (parsed.data.allMembers) {
       const users = await prisma.user.findMany({
         where: { role: { not: 'ADMIN' } },

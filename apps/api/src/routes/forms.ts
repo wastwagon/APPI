@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyRequest } from 'fastify'
-import { prisma } from '@appi/database'
+import { prisma, type Prisma } from '@appi/database'
 import { formSubmissionSchema } from '@appi/shared'
 import { rateLimit } from '../lib/redis.js'
 import { Resend } from 'resend'
@@ -50,7 +50,7 @@ export async function formRoutes(app: FastifyInstance) {
     }
 
     const row = await prisma.formSubmission.create({
-      data: { formType, payload, sourceIp: ip },
+      data: { formType, payload: payload as Prisma.InputJsonValue, sourceIp: ip },
     })
 
     notifyByEmail(formType, payload as Record<string, unknown>).catch((err) => {
