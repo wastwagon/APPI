@@ -242,7 +242,7 @@ export default function AdminContentPage() {
                   </div>
                 </div>
 
-                <CmsFieldEditor fields={fields} onChange={setFields} />
+                <CmsFieldEditor fields={fields} onChange={setFields} slug={selectedSlug} />
 
                 <Button type="button" className="mt-4" onClick={handleSave} disabled={saving}>
                   <Save className="mr-2 h-4 w-4" />

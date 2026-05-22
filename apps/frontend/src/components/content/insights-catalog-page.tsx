@@ -1,6 +1,7 @@
 import { ProgrammeBrief } from '@/components/layout/programme-brief'
 import { InsightsListSection } from '@/components/content/insights-list-section'
-import { getInsightsCatalog, type InsightsCatalogSlug } from '@/data/insights-catalog'
+import { resolveInsightsCatalog } from '@/lib/insights-cms'
+import type { InsightsCatalogSlug } from '@/data/insights-catalog'
 import { insightsImages } from '@/lib/content-images'
 import { getLocale } from 'next-intl/server'
 
@@ -21,7 +22,7 @@ type Props = {
 export async function InsightsCatalogPage({ catalogSlug }: Props) {
   const locale = await getLocale()
   const briefSlug = briefSlugByCatalog[catalogSlug]
-  const items = getInsightsCatalog(catalogSlug, locale)
+  const items = await resolveInsightsCatalog(catalogSlug, locale)
 
   return (
     <>

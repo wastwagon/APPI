@@ -1,8 +1,43 @@
 import type { FastifyInstance } from 'fastify'
-import { prisma, UserRole, VerificationStatus } from '@appi/database'
+import { prisma, UserRole, VerificationStatus, FormSubmissionStatus } from '@appi/database'
 import { adminPreHandler, adminOrKeyPreHandler } from '../plugins/require-admin.js'
 import { createNotification } from '../lib/notifications.js'
-import { notificationBroadcastSchema } from '@appi/shared'
+import { leadStatusUpdateSchema, notificationBroadcastSchema } from '@appi/shared'
+
+const LEAD_STATUS_MAP: Record<string, FormSubmissionStatus> = {
+  new: FormSubmissionStatus.NEW,
+  read: FormSubmissionStatus.READ,
+  archived: FormSubmissionStatus.ARCHIVED,
+}
+
+function leadStatusToApi(status: FormSubmissionStatus): 'new' | 'read' | 'archived' {
+  return status.toLowerCase() as 'new' | 'read' | 'archived'
+}
+
+function serializeLead(row: {
+  id: string
+  formType: string
+  payload: unknown
+  status: FormSubmissionStatus
+  readAt: Date | null
+  sourceIp: string | null
+  createdAt: Date
+}) {
+  return {
+    id: row.id,
+    formType: row.formType,
+    payload: row.payload as Record<string, unknown>,
+    status: leadStatusToApi(row.status),
+    readAt: row.readAt?.toISOString() ?? null,
+    sourceIp: row.sourceIp,
+    createdAt: row.createdAt.toISOString(),
+  }
+}
+
+function csvEscape(value: string): string {
+  if (/[",\n\r]/.test(value)) return `"${value.replace(/"/g, '""')}"`
+  return value
+}
 
 export async function adminRoutes(app: FastifyInstance) {
   const admin = { preHandler: [adminPreHandler] }
@@ -24,12 +59,85 @@ export async function adminRoutes(app: FastifyInstance) {
     }
   })
 
-  app.get('/api/v1/admin/leads', adminOrKey, async () => {
+  app.get('/api/v1/admin/leads', adminOrKey, async (request) => {
+    const q = request.query as { formType?: string; status?: string; limit?: string }
+    const limit = Math.min(Math.max(parseInt(q.limit ?? '100', 10) || 100, 1), 500)
+    const statusFilter = q.status?.trim().toLowerCase()
+    const status =
+      statusFilter && LEAD_STATUS_MAP[statusFilter] ? LEAD_STATUS_MAP[statusFilter] : undefined
+
     const items = await prisma.formSubmission.findMany({
+      where: {
+        ...(q.formType?.trim() ? { formType: q.formType.trim() } : {}),
+        ...(status ? { status } : {}),
+      },
       orderBy: { createdAt: 'desc' },
-      take: 100,
+      take: limit,
     })
-    return { items }
+    return { items: items.map(serializeLead) }
+  })
+
+  app.patch('/api/v1/admin/leads/:id', admin, async (request, reply) => {
+    const { id } = request.params as { id: string }
+    const parsed = leadStatusUpdateSchema.safeParse(request.body)
+    if (!parsed.success) {
+      return reply.status(400).send({ error: 'Invalid input', details: parsed.error.flatten() })
+    }
+
+    const nextStatus = LEAD_STATUS_MAP[parsed.data.status]
+    const existing = await prisma.formSubmission.findUnique({ where: { id } })
+    if (!existing) return reply.status(404).send({ error: 'Not found' })
+
+    const readAt =
+      nextStatus === FormSubmissionStatus.READ
+        ? (existing.readAt ?? new Date())
+        : nextStatus === FormSubmissionStatus.NEW
+          ? null
+          : existing.readAt
+
+    const updated = await prisma.formSubmission.update({
+      where: { id },
+      data: { status: nextStatus, readAt },
+    })
+    return { item: serializeLead(updated) }
+  })
+
+  app.get('/api/v1/admin/leads/export', adminOrKey, async (request, reply) => {
+    const q = request.query as { formType?: string; status?: string }
+    const statusFilter = q.status?.trim().toLowerCase()
+    const status =
+      statusFilter && LEAD_STATUS_MAP[statusFilter] ? LEAD_STATUS_MAP[statusFilter] : undefined
+
+    const items = await prisma.formSubmission.findMany({
+      where: {
+        ...(q.formType?.trim() ? { formType: q.formType.trim() } : {}),
+        ...(status ? { status } : {}),
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 5000,
+    })
+
+    const headers = ['id', 'formType', 'status', 'createdAt', 'readAt', 'sourceIp', 'payload']
+    const lines = [
+      headers.join(','),
+      ...items.map((row) =>
+        [
+          row.id,
+          row.formType,
+          leadStatusToApi(row.status),
+          row.createdAt.toISOString(),
+          row.readAt?.toISOString() ?? '',
+          row.sourceIp ?? '',
+          JSON.stringify(row.payload),
+        ]
+          .map((v) => csvEscape(String(v)))
+          .join(',')
+      ),
+    ]
+
+    reply.header('Content-Type', 'text/csv; charset=utf-8')
+    reply.header('Content-Disposition', 'attachment; filename="leads-export.csv"')
+    return lines.join('\n')
   })
 
   app.get('/api/v1/admin/members', admin, async (request) => {

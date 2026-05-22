@@ -13,18 +13,56 @@ export async function fetchAdminStats(): Promise<AdminStats> {
   return res.json()
 }
 
-export async function fetchAdminLeads() {
-  const res = await apiFetch('/api/v1/admin/leads')
-  if (!res.ok) throw new Error('Failed to load leads')
-  return res.json() as Promise<{ items: LeadItem[] }>
-}
+export type LeadStatus = 'new' | 'read' | 'archived'
 
 export type LeadItem = {
   id: string
   formType: string
   payload: Record<string, unknown>
+  status: LeadStatus
+  readAt: string | null
   sourceIp: string | null
   createdAt: string
+}
+
+export type FetchAdminLeadsParams = {
+  formType?: string
+  status?: LeadStatus
+  limit?: number
+}
+
+export async function fetchAdminLeads(params?: FetchAdminLeadsParams) {
+  const q = new URLSearchParams()
+  if (params?.formType) q.set('formType', params.formType)
+  if (params?.status) q.set('status', params.status)
+  if (params?.limit) q.set('limit', String(params.limit))
+  const suffix = q.toString() ? `?${q}` : ''
+  const res = await apiFetch(`/api/v1/admin/leads${suffix}`)
+  if (!res.ok) throw new Error('Failed to load leads')
+  return res.json() as Promise<{ items: LeadItem[] }>
+}
+
+export async function updateLeadStatus(id: string, status: LeadStatus) {
+  const res = await apiFetch(`/api/v1/admin/leads/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status }),
+  })
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}))
+    throw new Error((body as { error?: string }).error ?? 'Update failed')
+  }
+  return res.json() as Promise<{ item: LeadItem }>
+}
+
+export async function downloadLeadsExport(params?: { formType?: string; status?: LeadStatus }) {
+  const q = new URLSearchParams()
+  if (params?.formType) q.set('formType', params.formType)
+  if (params?.status) q.set('status', params.status)
+  const suffix = q.toString() ? `?${q}` : ''
+  const res = await apiFetch(`/api/v1/admin/leads/export${suffix}`)
+  if (!res.ok) throw new Error('Export failed')
+  return res.blob()
 }
 
 export async function fetchAdminVerifications() {

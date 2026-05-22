@@ -3,7 +3,10 @@
 import { useMemo } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
 import { RichTextEditor } from '@/components/admin/rich-text-editor'
+import { CmsMediaUrlField } from '@/components/admin/cms-media-url-field'
+import { CmsListItemsEditor } from '@/components/admin/cms-list-items-editor'
 import { Button } from '@/components/ui/button'
+import type { InsightListItem } from '@/data/insights-catalog'
 import {
   cmsFieldKind,
   cmsFieldLabel,
@@ -14,6 +17,8 @@ import {
 type Props = {
   fields: Record<string, unknown>
   onChange: (fields: Record<string, unknown>) => void
+  /** CMS page slug — enables insights catalog editor when applicable */
+  slug?: string | null
 }
 
 function ShortField({
@@ -73,6 +78,9 @@ function FieldByKind({
   const kind = cmsFieldKind(fieldKey, value) as CmsFieldKind
   const label = cmsFieldLabel(fieldKey)
 
+  if (kind === 'media') {
+    return <CmsMediaUrlField label={label} value={value} onChange={onChange} />
+  }
   if (kind === 'url') {
     return <ShortField label={label} value={value} onChange={onChange} type="url" />
   }
@@ -99,6 +107,7 @@ function CmsFieldsList({
     const short: string[] = []
     const rich: string[] = []
     const urls: string[] = []
+    const media: string[] = []
     const bullets: string[] = []
     const faq: string[] = []
     const nested: [string, Record<string, unknown>][] = []
@@ -113,6 +122,7 @@ function CmsFieldsList({
       if (typeof val !== 'string') continue
       if (/^bullet\d+$/.test(key)) bullets.push(key)
       else if (/^q\d+$/.test(key) || /^a\d+$/.test(key)) faq.push(key)
+      else if (kind === 'media') media.push(key)
       else if (kind === 'url') urls.push(key)
       else if (kind === 'rich') rich.push(key)
       else short.push(key)
@@ -122,6 +132,7 @@ function CmsFieldsList({
       short: sortKeys(short),
       rich: sortKeys(rich),
       urls: sortKeys(urls),
+      media: sortKeys(media),
       bullets: sortKeys(bullets),
       faq: sortKeys(faq),
       nested,
@@ -204,10 +215,18 @@ function CmsFieldsList({
         </section>
       )}
 
-      {groups.urls.length > 0 && (
+      {(groups.urls.length > 0 || groups.media.length > 0) && (
         <section className="mt-8 space-y-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-accent-warm">Links</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-accent-warm">Links & media URLs</p>
           <div className="grid gap-4 sm:grid-cols-2">
+            {groups.media.map((key) => (
+              <FieldByKind
+                key={key}
+                fieldKey={key}
+                value={fields[key] as string}
+                onChange={(v) => patch(key, v)}
+              />
+            ))}
             {groups.urls.map((key) => (
               <FieldByKind
                 key={key}
@@ -313,10 +332,27 @@ function CmsFieldsList({
   )
 }
 
-export function CmsFieldEditor({ fields, onChange }: Props) {
+function parseListItemsField(raw: unknown): InsightListItem[] {
+  if (!Array.isArray(raw)) return []
+  return raw as InsightListItem[]
+}
+
+export function CmsFieldEditor({ fields, onChange, slug }: Props) {
+  const showCatalogEditor = Boolean(slug?.startsWith('content.insights.'))
+  const listItems = parseListItemsField(fields.listItems)
+
+  const fieldsWithoutList = { ...fields }
+  delete fieldsWithoutList.listItems
+
   return (
     <div className="mt-6 max-h-[min(70vh,720px)] overflow-y-auto pr-1">
-      <CmsFieldsList fields={fields} onChange={onChange} />
+      <CmsFieldsList fields={fieldsWithoutList} onChange={(next) => onChange({ ...next, listItems: fields.listItems })} />
+      {showCatalogEditor && (
+        <CmsListItemsEditor
+          items={listItems}
+          onChange={(items) => onChange({ ...fields, listItems: items })}
+        />
+      )}
     </div>
   )
 }

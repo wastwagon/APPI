@@ -140,14 +140,23 @@ model MediaAsset {
   @@index([createdAt])
 }
 
+enum FormSubmissionStatus {
+  NEW
+  READ
+  ARCHIVED
+}
+
 model FormSubmission {
-  id        String   @id @default(cuid())
+  id        String               @id @default(cuid())
   formType  String
   payload   Json
+  status    FormSubmissionStatus @default(NEW)
+  readAt    DateTime?
   sourceIp  String?
-  createdAt DateTime @default(now())
+  createdAt DateTime             @default(now())
 
   @@index([formType])
+  @@index([status])
   @@index([createdAt])
 }
 

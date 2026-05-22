@@ -1,4 +1,4 @@
-export type CmsFieldKind = 'short' | 'rich' | 'url'
+export type CmsFieldKind = 'short' | 'rich' | 'url' | 'media'
 
 const SHORT_KEYS = new Set([
   'title',
@@ -104,7 +104,10 @@ export function cmsFieldKind(key: string, value: unknown): CmsFieldKind | 'neste
   }
   if (typeof value !== 'string') return 'skip'
 
-  if (key.endsWith('Href') || key === 'href' || key.endsWith('Url')) return 'url'
+  if (key === 'listItems') return 'skip'
+  if (/ImageUrl$|^heroImage$|^featuredImage$|^imageSrc$/i.test(key)) return 'media'
+  if (key.endsWith('Href') || key === 'href' || (key.endsWith('Url') && key !== 'imageUrl')) return 'url'
+  if (key === 'imageUrl' || key === 'mediaUrl') return 'media'
   if (/^bullet\d+$/.test(key) || /^q\d+$/.test(key) || /^a\d+$/.test(key)) return 'rich'
   if (RICH_KEYS.has(key) || key.endsWith('Desc') || key.endsWith('Lead')) return 'rich'
   if (SHORT_KEYS.has(key) || key.endsWith('Title') || key.endsWith('Label') || key.endsWith('Cta')) {

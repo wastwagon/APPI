@@ -72,6 +72,9 @@ importers:
       '@appi/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@tiptap/extension-image':
+        specifier: ^3.23.5
+        version: 3.23.6(@tiptap/core@3.23.5(@tiptap/pm@3.23.5))
       '@tiptap/extension-link':
         specifier: ^3.23.5
         version: 3.23.5(@tiptap/core@3.23.5(@tiptap/pm@3.23.5))(@tiptap/pm@3.23.5)
@@ -789,6 +792,11 @@ packages:
     peerDependencies:
       '@tiptap/core': 3.23.5
       '@tiptap/pm': 3.23.5
+
+  '@tiptap/extension-image@3.23.6':
+    resolution: {integrity: sha512-vvNGxArvD2dW+XvV0KdYovRVUzCy8QVNulc2r5pV7umnG1E6cCmMkiHiif8J2ePJu2KtysAvJQe0iF+UqueGMw==}
+    peerDependencies:
+      '@tiptap/core': 3.23.6
 
   '@tiptap/extension-italic@3.23.5':
     resolution: {integrity: sha512-XjRSPr6j4mz+8O5j5KNfxVb+1fGNt0wr+js6MLxxGdU7M+PoDPdVY6fARbmBazv4ERlZ5PNS9m35Vo5xDjDfrg==}
@@ -2428,6 +2436,10 @@ snapshots:
     dependencies:
       '@tiptap/core': 3.23.5(@tiptap/pm@3.23.5)
       '@tiptap/pm': 3.23.5
+
+  '@tiptap/extension-image@3.23.6(@tiptap/core@3.23.5(@tiptap/pm@3.23.5))':
+    dependencies:
+      '@tiptap/core': 3.23.5(@tiptap/pm@3.23.5)
 
   '@tiptap/extension-italic@3.23.5(@tiptap/core@3.23.5(@tiptap/pm@3.23.5))':
     dependencies:
