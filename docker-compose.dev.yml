@@ -12,9 +12,6 @@ services:
       - "${REDIS_PORT:-6382}:6379"
     networks: [appi_dev]
 
-  migrate:
-    networks: [appi_dev]
-
   api:
     build:
       target: development

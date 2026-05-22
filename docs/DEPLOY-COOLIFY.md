@@ -52,27 +52,43 @@ In Coolify → your compose resource → **Environment Variables**, paste from [
 
 ---
 
-## 4. Domain and routing
+## 4. Domains in Coolify (important)
 
-1. In Coolify, open the **frontend** service (only this service should be public).
-2. Assign your domain (e.g. `appi.yourdomain.org`) to **port 3000**.
-3. Enable **HTTPS** (Let’s Encrypt) in Coolify.
-4. The API is **not** exposed publicly; the Next.js app proxies `/api/v1/*` and `/uploads/*` to the API container.
+The compose file defines **4 services**: `db`, `redis`, `api`, `frontend`.
+
+Coolify only shows **domain fields for services it builds** (`api` and `frontend`). You will **not** see migrate/seed anymore — migrations and seed run inside **api** on startup.
+
+| Coolify field | What to do |
+|---------------|------------|
+| **Domains for frontend** | Set your public URL (HTTPS). This is your website. |
+| **Domains for api** | Leave **empty** — internal only, no public routing |
+
+`db` and `redis` never need domains.
+
+The API container automatically runs **Prisma migrations** (and optional **seed** when `SEED_ADMIN_ENABLED=true`) before it starts listening on port 4000.
 
 ---
 
-## 5. First deploy checklist
+## 5. Domain and routing
+
+1. Assign your domain only on **frontend** (port **3000**).
+2. Enable **HTTPS** (Let’s Encrypt) in Coolify.
+3. The browser uses the frontend; Next.js proxies `/api/v1/*` and `/uploads/*` to `http://api:4000` inside the stack.
+
+---
+
+## 6. First deploy checklist
 
 1. Set all required env vars (see above).
 2. Set `SEED_ADMIN_ENABLED=true` and admin email/password.
-3. Deploy / **Redeploy**.
-4. Wait for services: `db` → `migrate` → `seed` → `api` → `frontend` (all healthy).
+3. Deploy / **Redeploy** (first start can take 2–3 minutes while api runs migrations).
+4. Wait for: `db` + `redis` healthy → `api` healthy → `frontend` healthy.
 5. Open `https://your-domain/admin/login` and sign in.
 6. Set `SEED_ADMIN_ENABLED=false` and redeploy (stops re-seeding on every deploy).
 
 ---
 
-## 6. Volumes (data persistence)
+## 7. Volumes (data persistence)
 
 Coolify should keep these named volumes:
 
@@ -86,7 +102,7 @@ Back up `postgres_data` regularly on your VPS.
 
 ---
 
-## 7. Local production test (optional)
+## 8. Local production test (optional)
 
 ```bash
 cp .env.coolify.example .env
@@ -99,24 +115,24 @@ Site: http://localhost:3000 (or `COOLIFY_PORT`).
 
 ---
 
-## 8. Troubleshooting
+## 9. Troubleshooting
 
 | Issue | What to check |
 |-------|----------------|
 | Build fails | Coolify build logs; ensure `pnpm-lock.yaml` is committed |
-| `migrate` exits with error | `DATABASE_URL` host must be `db`, not `localhost` |
-| 502 / unhealthy frontend | API health: `docker compose logs api`; wait for `seed` + `migrate` to finish |
+| API stuck starting | Check api logs: migrations need `DATABASE_URL` with host `db` |
+| 502 / unhealthy frontend | API logs: first boot runs migrations (up to ~3 min); check `docker compose logs api` |
 | Admin login fails | Was `SEED_ADMIN_ENABLED=true` on first deploy? Password in Coolify env |
 | CORS errors | `CORS_ORIGIN` must match `NEXT_PUBLIC_SITE_URL` exactly (https, no trailing slash) |
 | Uploads missing after redeploy | Ensure `uploads_data` volume is attached to **api** |
 
 ---
 
-## 9. Updates
+## 10. Updates
 
 1. Push changes to GitHub (GitHub Desktop → **Push origin**).
 2. In Coolify → **Redeploy** the compose stack.
-3. `migrate` runs on each deploy (applies new Prisma migrations).
+3. Migrations run automatically when the **api** container starts.
 4. Keep `SEED_ADMIN_ENABLED=false` after the first deploy.
 
 ---

@@ -72,7 +72,7 @@ Full stack in one compose file: **frontend**, **API**, **Postgres**, **Redis**.
 | 1 | Push to [github.com/wastwagon/APPI](https://github.com/wastwagon/APPI) (see [docs/DEPLOY-COOLIFY.md](./docs/DEPLOY-COOLIFY.md)) |
 | 2 | Coolify → **Docker Compose** → this repo → `docker-compose.yml` |
 | 3 | Copy env from [`.env.coolify.example`](./.env.coolify.example) |
-| 4 | Point domain at **frontend** port **3000** |
+| 4 | Coolify: domain on **frontend** only (leave **api** domain empty) |
 | 5 | First deploy: `SEED_ADMIN_ENABLED=true`, then set to `false` |
 
 ```bash

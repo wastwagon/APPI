@@ -39,6 +39,9 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY --from=builder /app/apps/api/package.json ./apps/api/package.json
 COPY --from=builder /app/packages ./packages
-WORKDIR /app/apps/api
+COPY --from=builder /app/apps/frontend/public/images ./apps/frontend/public/images
+COPY --from=builder /app/apps/frontend/messages ./apps/frontend/messages
+COPY docker/api-entrypoint.sh /app/docker/api-entrypoint.sh
+RUN chmod +x /app/docker/api-entrypoint.sh
 EXPOSE 4000
-CMD ["node", "dist/index.js"]
+CMD ["/app/docker/api-entrypoint.sh"]
